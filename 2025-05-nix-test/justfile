@@ -8,8 +8,9 @@ sub-update:
 install IP:
   ssh -o "StrictHostKeyChecking no" nixos@{{IP}} "sudo bash -c '\
     nix-shell -p git --run \"cd /root/ && \
-    git clone -b nix-test https://github.com/ryanbarrett/nix-snippets.git && \
-    cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/nix-test/ && \   
+    rm -rf nix-snippets && \
+    git clone https://github.com/ryanbarrett/nix-snippets.git && \
+    cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/nix-test/ && \
     sh install-nix.sh\"'"
 
 ## nix updates
