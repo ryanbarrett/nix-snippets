@@ -9,18 +9,9 @@
     ];
 
   # Boot configuration
-  #boot.loader = {
-  #  systemd-boot.enable = true;
-  #  efi.canTouchEfiVariables = true;
-  #};
   boot.loader = {
-    grub = {
-      enable = true;
-      device = "/dev/vda";
-      useOSProber = true;
-    };
-    efi.canTouchEfiVariables = false;
-    systemd-boot.enable = false;
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
   };
 
   # Network configuration
