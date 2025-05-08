@@ -16,11 +16,11 @@
   boot.loader = {
     grub = {
       enable = true;
-      device = "/dev/sda";  # Use actual device, not "nodev"
+      device = "/dev/vda";
       useOSProber = true;
     };
-    efi.canTouchEfiVariables = false;  # Explicitly disable EFI
-    systemd-boot.enable = false;       # Explicitly disable systemd-boot
+    efi.canTouchEfiVariables = false;
+    systemd-boot.enable = false;
   };
 
   # Network configuration
