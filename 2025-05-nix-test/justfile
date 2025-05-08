@@ -13,8 +13,11 @@ install IP:
     cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/nix-test/ && \
     sh install-nix.sh\"'"
 
-## echo Set your root password in the new instance && \
-## echo ssh -o \"StrictHostKeyChecking no\" nixos@{{IP}}  && sudo su && nixos-enter --root /mnt && passwd\
+## Set your root password in the new instance
+## ssh -o \"StrictHostKeyChecking no\" nixos@{{IP}}
+## sudo su 
+## nixos-enter --root /mnt 
+## passwd
 
 ## nix updates
 hostname := `hostname | cut -d "." -f 1`
