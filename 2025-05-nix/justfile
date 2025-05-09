@@ -1,23 +1,30 @@
 #!/usr/bin/env -S just --justfile
 
+REPO := https://github.com/ryanbarrett/nix-snippets.git
+
 ## repo configuration
 sub-update:
   cd .. && git submodule update --init --recursive
 
 ## nix installation
-install IP:
+install IP HOST="nix-test":
   ssh -o "StrictHostKeyChecking no" nixos@{{IP}} "sudo bash -c '\
     nix-shell -p git --run \"cd /root/ && \
     rm -rf nix-snippets && \
-    git clone https://github.com/ryanbarrett/nix-snippets.git && \
-    cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/nix-test/ && \
+    git clone {{REPO}} && \
+    cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/{{HOST}}/ && \
     sh install-nix.sh\"'"
 
+## just install <IP> <HOST> 
+# e.g. just install 192.168.1.100 n8n-nix 
+# or just install 192.168.1.101 redis-nix
+
 ## Set your root password in the new instance
-## ssh -o \"StrictHostKeyChecking no\" nixos@{{IP}}
-## sudo su 
-## nixos-enter --root /mnt 
-## passwd
+# ssh -o \"StrictHostKeyChecking no\" nixos@{{IP}}
+# sudo su 
+# nixos-enter --root /mnt 
+# passwd
+
 
 ## nix updates
 hostname := `hostname | cut -d "." -f 1`
@@ -26,7 +33,8 @@ switch target_host=hostname:
   cd nix && sudo nixos-rebuild switch --flake .#{{target_host}}
 
 ## copy docker compose yaml to remote host via Ansible
-#compose HOST *V:
-#  cd ansible && ansible-playbook playbook.yaml --limit {{HOST}} --tags compose {{V}}
+compose HOST *V:
+  cd ansible && ansible-playbook playbook.yaml --limit {{HOST}} --tags compose {{V}}
 
 # remove old host key with: ssh-keygen -R {{IP}}  
+# TODO: add to ansible: cd /root && git --branch=n8n clone https://github.com/ryanbarrett/nix-snippets.git

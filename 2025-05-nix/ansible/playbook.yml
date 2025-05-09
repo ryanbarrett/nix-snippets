@@ -1,0 +1,5 @@
+---
+  - hosts: n8n-nix
+    roles:
+      - role: ironicbadger.docker-compose-generator
+        tags: compose

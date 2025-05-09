@@ -16,17 +16,17 @@
 
   # Network configuration
   networking = {
-    firewall.enable = false;
-    hostName = "nix-test";
-    interfaces.ens18 = {
-      useDHCP = false;
-      ipv4.addresses = [{
-        address = "192.168.1.68";
-        prefixLength = 24;
-      }];
+    firewall = {
+      enable = true;
+      # Allow tailscale traffic
+      trustedInterfaces = [ "tailscale0" ];
+      # Redis port is only accessible via Tailscale, no need to open public ports
+      # Allow the tailscale UDP port
+      allowedUDPPorts = [ config.services.tailscale.port ];
     };
-    defaultGateway = "192.168.1.1";
-    nameservers = [ "192.168.1.1" ];
+    hostName = "redis-nix";
+    # Use DHCP as requested
+    useDHCP = true;
   };
 
   # System localization
@@ -37,26 +37,45 @@
     enable = false;
   };
 
+  # SSH configuration
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = true;
     settings.PermitRootLogin = "yes";
   };
+  
   services.qemuGuest.enable = true;
-  services.tailscale.enable = true;
+  
+  # Redis configuration for production
+  services.redis = {
+    enable = true;
+    settings = {
+      # Bind to private interface and Tailscale interface
+      bind = "127.0.0.1 ::1";
+      # Production settings
+      protected-mode = "yes";
+      maxmemory = "1gb";
+      maxmemory-policy = "allkeys-lru";
+      # Persistence settings
+      appendonly = "yes";
+      appendfsync = "everysec";
+      # Security (set a separate password in a secrets file in production)
+      requirepass = "CHANGE_THIS_TO_A_STRONG_PASSWORD";
+    };
+  };
 
+  # Tailscale configuration
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client";
+  };
 
   # userland
-  #home-manager.useGlobalPkgs = true;
-  #home-manager.useUserPackages = true;
-  #home-manager.users.ryan = { imports = [ ./../../../home/ryan.nix ]; };
   users.users.ryan = {
     isNormalUser = true;
     description = "ryan";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [
-      #home-manager
-    ];
+    packages = with pkgs; [];
     openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPXxUWnqxVJOD0DHemCoYQkQq6jy+8qXdncQbjuHFPzJ ryan@Nostromo" ];
   };
 
@@ -67,5 +86,4 @@
       enable32Bit = true;
     };
   };
-
 }
