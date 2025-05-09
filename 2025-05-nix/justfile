@@ -1,18 +1,19 @@
 #!/usr/bin/env -S just --justfile
 
-REPO := https://github.com/ryanbarrett/nix-snippets.git
+REPO := "https://github.com/ryanbarrett/nix-snippets.git"
+BRANCH := "n8n"
 
 ## repo configuration
 sub-update:
   cd .. && git submodule update --init --recursive
 
 ## nix installation
-install IP HOST="nix-test":
+install IP HOST:
   ssh -o "StrictHostKeyChecking no" nixos@{{IP}} "sudo bash -c '\
     nix-shell -p git --run \"cd /root/ && \
     rm -rf nix-snippets && \
-    git clone {{REPO}} && \
-    cd nix-snippets/2025-05-nix-test/nix/hosts/nixos/{{HOST}}/ && \
+    git clone --branch={{BRANCH}} {{REPO}} && \
+    cd nix-snippets/2025-05-nix/nix/hosts/nixos/{{HOST}}/ && \
     sh install-nix.sh\"'"
 
 ## just install <IP> <HOST> 

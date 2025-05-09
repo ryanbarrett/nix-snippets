@@ -12,9 +12,25 @@
       libx = import ./lib { inherit inputs outputs stateVersion pkgs; };
     in {
       nixosConfigurations = {
-        nix-test = libx.mkNixos {
+
+        # Add the n8n server configuration
+        n8n-nix = libx.mkNixos {
           system = "x86_64-linux";
-          hostname = "nix-test";
+          hostname = "n8n-nix";
+          username = "ryan";
+        };
+        
+        # Add the Redis server configuration
+        redis-nix = libx.mkNixos {
+          system = "x86_64-linux";
+          hostname = "redis-nix";
+          username = "ryan";
+        };
+        
+        # Add the PostgreSQL server configuration
+        postgres-nix = libx.mkNixos {
+          system = "x86_64-linux";
+          hostname = "postgres-nix";
           username = "ryan";
         };
       };
