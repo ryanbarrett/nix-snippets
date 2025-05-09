@@ -13,4 +13,4 @@ nixos-generate-config --no-filesystems --root /mnt
 # installation
 export NIXPKGS_ALLOW_UNFREE=1
 cp hardware-configuration.nix /mnt/etc/nixos/
-nixos-install --root /mnt --flake .#nix-test --impure
+nixos-install --root /mnt --flake .#postgres-nix --impure
