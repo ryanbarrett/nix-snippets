@@ -51,7 +51,7 @@
     enable = true;
     settings = {
       # Bind to private interface and Tailscale interface
-      bind = "0.0.0.0";
+      bind = lib.mkForce "0.0.0.0";
       # Production settings
       protected-mode = "yes";
       maxmemory = "1gb";
