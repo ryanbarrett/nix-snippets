@@ -51,7 +51,7 @@
     enable = true;
     settings = {
       # Bind to private interface and Tailscale interface
-      bind = "127.0.0.1 ::1";
+      bind = "0.0.0.0";
       # Production settings
       protected-mode = "yes";
       maxmemory = "1gb";
