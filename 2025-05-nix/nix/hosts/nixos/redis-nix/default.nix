@@ -56,9 +56,6 @@
   services.qemuGuest.enable = true;
   
   # Redis configuration for production
-  let 
-    redisPassword = builtins.getEnv "REDIS_PASSWORD";
-  in
   services.redis = {
     enable = true;
     settings = {
@@ -72,7 +69,7 @@
       appendonly = "yes";
       appendfsync = "everysec";
       # Security (set a separate password in a secrets file in production)
-      requirepass = redisPassword;
+      requirepass = builtins.getEnv "REDIS_PASSWORD";
     };
   };
 
