@@ -10,9 +10,18 @@
 
   # Boot configuration
   boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = false;
+    efi.canTouchEfiVariables = false;
+    grub = {
+      enable = true;
+      device = "/dev/vda";  # Use the main disk device
+      useOSProber = true;
+      forceInstall = true;  # Force install despite blocklist warnings
+    };
   };
+
+  # Add this to ensure proper partition detection
+  boot.supportedFilesystems = [ "ext4" ];
 
   # Network configuration
   networking = {
@@ -47,6 +56,9 @@
   services.qemuGuest.enable = true;
   
   # Redis configuration for production
+  let 
+    redisPassword = builtins.getEnv "REDIS_PASSWORD";
+  in
   services.redis = {
     enable = true;
     settings = {
@@ -60,7 +72,7 @@
       appendonly = "yes";
       appendfsync = "everysec";
       # Security (set a separate password in a secrets file in production)
-      requirepass = "CHANGE_THIS_TO_A_STRONG_PASSWORD";
+      requirepass = redisPassword;
     };
   };
 

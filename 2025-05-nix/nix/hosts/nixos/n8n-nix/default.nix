@@ -10,9 +10,18 @@
 
   # Boot configuration
   boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = false;
+    efi.canTouchEfiVariables = false;
+    grub = {
+      enable = true;
+      device = "/dev/vda";  # Use the main disk device
+      useOSProber = true;
+      forceInstall = true;  # Force install despite blocklist warnings
+    };
   };
+
+  # Add this to ensure proper partition detection
+  boot.supportedFilesystems = [ "ext4" ];
 
   # Network configuration
   networking = {
